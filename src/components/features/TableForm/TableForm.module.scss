@@ -1,0 +1,42 @@
+.number {
+    width: 60px;
+    text-align: center;
+    padding-left: 20px;
+    margin: 0 10px
+}
+.bill {
+    width: 100px;
+    text-align: center;
+    padding-left: 20px;
+}
+span {
+    font-weight: bold;
+    margin-left: 100px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    width: 300px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.label {
+    margin-right: 20px;
+}
+
+.inputs {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-direction: row;
+    width: 150px;
+}
+
+.dollar {
+    font-weight: bold;
+    margin-left: 20px;
+    margin-right: 10px;
+}
