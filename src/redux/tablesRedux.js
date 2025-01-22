@@ -34,9 +34,10 @@ export const updateTableRequest = updatedTable => {
             body: JSON.stringify(updatedTable),
           };
           
-            fetch(`http://localhost:3131/api/tables/${updatedTable.id}`, options)
+            fetch(`http://localhost:3131/api/tables/${updatedTable.idData}`, options)
             .then((res) => res.json())
             .then((data) => dispatch(updateTable(data)))
+            .catch((error) => { console.log(error) });
     }
 }
 

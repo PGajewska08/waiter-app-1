@@ -1,63 +1,139 @@
 import styles from './TableForm.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTableById } from '../../../redux/tablesRedux';
-import { Button, Container, Form, Row, Col } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { Button, Form} from 'react-bootstrap';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { updateTableRequest } from '../../../redux/tablesRedux';
+import { STATUSES } from '../../../redux/statusesRedux'
+
 
 const TableForm = () => {
     const  {tableId}  = useParams();
-    const numTableId = parseInt(tableId);
+    console.log("tableId: " + tableId);
+    const navigate = useNavigate();
+   // console.log("id z adresu: "+tableId + ", typ : "+typeof(tableId));
     const dispatch = useDispatch();
-    const table = useSelector(state => getTableById(state,numTableId));
+    const tableData = useSelector(state => getTableById(state,parseInt(tableId)));
+    console.log("tableData: " + typeof(tableData));
+    if(!tableData) {
+        navigate("/");
+    }  
+   // console.log("stolik: "+ tableData);
+    //console.log("klucze stolika: "+ Object.keys(tableData));
+   // console.log("klucze wartości stolika: "+ Object.values(tableData));
 
-    const [peopleAmount, setPeopleAmount] = useState(table.peopleAmount);
-    const [maxPeopleAmount, setMaxPeopleAmount] = useState(table.maxPeopleAmount);
-    const [bill, setBill] = useState(table.bill);
-    const [tableStatus, setTableStatus] = useState(table.status);
+   // Object.values(tableData).map(val => console.log(val+ " - " + typeof(val)));
+   
+    
+    const idData = parseInt(tableId);
+    const peopleAmountData = parseInt(tableData.peopleAmount);
+    //console.log("peopleAmountData: " + peopleAmountData)
+    const statusData = tableData.status;
+   // console.log("statusData: "+ statusData);
+    const maxPeopleAmountData = parseInt(tableData.maxPeopleAmount);
+    const billData = parseInt(tableData.bill);
+
+    const [status, setStatus] = useState(statusData);
+    const [peopleAmount, setPeopleAmount] = useState(peopleAmountData);
+    const [maxPeopleAmount, setMaxPeopleAmount] = useState(maxPeopleAmountData);
+    const [bill, setBill] = useState(billData);
     
     const update = e =>{
         e.preventDefault();
       
         dispatch(updateTableRequest({
-            numTableId,
-            tableStatus,
+            idData,
+            status,
             peopleAmount,
             maxPeopleAmount,
             bill
         }));
-        
+         navigate(`/`);
     };
 
-    return(
-        <form onSubmit={e =>  update(e)}>
+    useEffect(() => {
+        if(status === 'Cleaning' || status === 'Free') {
+            setPeopleAmount(0);
+        }
+    },[status]);
+
+    useEffect(() => {
+        if(peopleAmount > maxPeopleAmount) {
+            setMaxPeopleAmount(peopleAmount);
+        }
+        if(peopleAmount < 0) {
+            setPeopleAmount(0);
+        }
+        if(peopleAmount > 10) {
+            setPeopleAmount(10);
+        }
+        if(maxPeopleAmount < 0) {
+            setMaxPeopleAmount(0);
+        }
+        if(maxPeopleAmount > 10) {
+            setMaxPeopleAmount(10);
+        }
+    },[peopleAmount, maxPeopleAmount]);
+
+    // BŁĘDNY ADRES
+    if(!tableData) {
+        return <Navigate to="/" />;
+    }
+ 
+    // STOLIK ZAJĘTY
+    if(status === 'Busy') {
+
+        return(
+            <form onSubmit={e =>  update(e)}>
                 <div className={styles.row}>
                     <p className={styles.label}>Status:</p>                   
-                    <select name="Status" defaultValue={tableStatus}>
-                        <option value="Free" onClick={event => setTableStatus(event.target.value)} >Free</option>
-                        <option value="Busy" onClick={event => setTableStatus(event.target.value)} >Busy</option>
-                        <option value="Reserved" onClick={event => setTableStatus(event.target.value)} >Reserved</option>
-                        <option value="Cleaning" onClick={event => setTableStatus(event.target.value)} >Cleaning</option>
-                    </select>
-                </div>
+                    <Form.Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                        {Object.values(STATUSES).map(value => <option key={value}>{value}</option>)}
+                    </Form.Select>
+                    </div>
+                    <div className={styles.row}>
+                            <p className={styles.label}>People: </p> 
+                        <div className={styles.inputs}>
+                        <Form.Control className={styles.number} type="number" value={peopleAmount} max={10} min={0} onChange={e=>setPeopleAmount(parseInt(e.target.value))} /> /
+                        <Form.Control className={styles.number} type="number" value={maxPeopleAmount} max={10} min={0} onChange={e=>setMaxPeopleAmount(parseInt(e.target.value))} /> 
+                        </div>  
+                    </div>
+                    <div className={styles.row}>
+                        <p className={styles.label}>Bill:</p>
+                        <p className={styles.dollar}>$</p>
+                        <Form.Control className={styles.bill} type='number' value={bill} onChange={e=>setBill(parseInt(e.target.value))} />
+                    </div>
+                    <div className={styles.row}>
+                         <Button type='submit'>Update</Button>
+                    </div>
+            </form>
+        );
+    }
+
+    else {
+
+        return(
+            <form onSubmit={e =>  update(e)}>
                 <div className={styles.row}>
-                        <p className={styles.label}>People: </p> 
-                    <div className={styles.inputs}>
-                    <Form.Control className={styles.number} type="number" value={peopleAmount} onChange={e=>setPeopleAmount(e.target.value)} /> /
-                    <Form.Control className={styles.number} type="number" value={maxPeopleAmount} onChange={e=>setMaxPeopleAmount(e.target.value)} /> 
-                    </div>  
-                </div>
-                <div className={styles.row}>
-                    <p className={styles.label}>Bill:</p>
-                    <p className={styles.dollar}>$</p>
-                    <Form.Control className={styles.bill} type='number' value={bill} onChange={e=>setBill(e.target.value)} />
-                </div>
-                <div className={styles.row}>
-                     <Button type='submit'>Update</Button>
-                </div>
-        </form>
-    );
+                    <p className={styles.label}>Status:</p>                   
+                    <Form.Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                        {Object.values(STATUSES).map(value => <option key={value}>{value}</option>)}
+                    </Form.Select>
+                    </div>
+                    <div className={styles.row}>
+                            <p className={styles.label}>People: </p> 
+                        <div className={styles.inputs}>
+                        <Form.Control className={styles.number} type="number" value={peopleAmount} max={10} min={0} onChange={e=>setPeopleAmount(parseInt(e.target.value))} /> /
+                        <Form.Control className={styles.number} type="number" value={maxPeopleAmount} max={10} min={0} onChange={e=>setMaxPeopleAmount(parseInt(e.target.value))} /> 
+                        </div>  
+                    </div>
+                    <div className={styles.row}>
+                         <Button type='submit'>Update</Button>
+                    </div>
+            </form>
+        );
+    }
 };
 
 export default TableForm;

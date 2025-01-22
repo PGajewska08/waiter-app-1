@@ -8,6 +8,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 const Table = ({tableId}) => {
     const table = useSelector(state => getTableById(state, tableId));
+    console.log(table.status);
     return (
         <Container>
             <Row className={styles.tableRow}>
@@ -15,12 +16,15 @@ const Table = ({tableId}) => {
                 <h3>Table: {table.id}</h3>
             </Col>
             <Col xs={5}>
-                <p>Status: {table.status}</p>
+                <p>Status: <b>{table.status}</b></p>
             </Col>
             <Col  xs={5} className={styles.button}>
+            <Link key={table.id} to={"/table/"+table.id} className={styles.listLink}>
                 <Button>
-                    <Link key={table.id} to={"/table/"+table.id} className={styles.listLink}>Show more</Link>
+                    Show more
                 </Button>   
+            </Link>
+                
             </Col>         
         </Row>
         </Container>
