@@ -9,22 +9,23 @@ import { STATUSES } from '../../../redux/statusesRedux'
 
 
 const TableForm = () => {
+    
     const  {tableId}  = useParams();
-    console.log("tableId: " + tableId);
+   // console.log("tableId: " + tableId);
     const navigate = useNavigate();
    // console.log("id z adresu: "+tableId + ", typ : "+typeof(tableId));
     const dispatch = useDispatch();
     const tableData = useSelector(state => getTableById(state,parseInt(tableId)));
-    console.log("tableData: " + typeof(tableData));
-    if(!tableData) {
-        navigate("/");
-    }  
-   // console.log("stolik: "+ tableData);
-    //console.log("klucze stolika: "+ Object.keys(tableData));
-   // console.log("klucze wartości stolika: "+ Object.values(tableData));
-
-   // Object.values(tableData).map(val => console.log(val+ " - " + typeof(val)));
-   
+    console.log("table data: " +tableData);
+    console.log("type of table data: " +typeof(tableData));
+    // Object.keys(tableData).map(k => console.log(k+" "));
+    // Object.values(tableData).map(v => console.log(v+" "));
+    
+    if(typeof(tableData) === 'undefined') {
+        navigate('/');
+        
+    }
+    
     
     const idData = parseInt(tableId);
     const peopleAmountData = parseInt(tableData.peopleAmount);
@@ -133,7 +134,7 @@ const TableForm = () => {
                     </div>
             </form>
         );
-    }
-};
+    
+};}
 
 export default TableForm;
