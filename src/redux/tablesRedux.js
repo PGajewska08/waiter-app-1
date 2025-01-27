@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import shortid from 'shortid';
+import { API_URL } from '../config';
 
 const ADD_TABLE = 'app/tables/ADD_TABLE';
 const UPDATE_TABLES = 'app/tables/UPDATE_TABLES';
@@ -19,7 +19,7 @@ export const updateTable = payload => ({type: UPDATE_TABLE, payload});
 // pobieranie danych z serwera i aktualizacja stanu - magazynu REDUXA 
 export const fetchTables = () => {
     return (dispatch) => {  
-        fetch('http://localhost:3131/api/tables')
+        fetch( `${API_URL}/tables`)
             .then(res => res.json())
             .then(tables => dispatch(updateTables(tables)));
     }  
@@ -37,7 +37,7 @@ export const updateTableRequest = updatedTable => {
             body: JSON.stringify(updatedTable),
           };
           
-            fetch(`http://localhost:3131/api/tables/${updatedTable.idData}`, options)
+            fetch(`${API_URL}/tables/${updatedTable.idData}`, options)
             .then((res) => res.json())
             .then((data) => dispatch(updateTable(data)))
             .catch((error) => { console.log(error) });
