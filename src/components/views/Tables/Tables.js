@@ -6,6 +6,11 @@ import { Container } from 'react-bootstrap';
 
 const Tables = () => {
     const tables = useSelector(getAllTables);
+    if(!tables.length) {
+        return (
+            <p>Loading...</p>
+        )
+    }
     return (
         <Container>
             <h2 className={styles.title}>All tables</h2>

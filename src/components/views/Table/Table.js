@@ -4,7 +4,7 @@ import { getTableById } from '../../../redux/tablesRedux';
 import { Button, Container } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Table = ({tableId}) => {
     const table = useSelector(state => getTableById(state, tableId));

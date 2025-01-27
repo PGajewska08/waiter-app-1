@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import shortid from 'shortid';
 
 const ADD_TABLE = 'app/tables/ADD_TABLE';
@@ -12,6 +13,8 @@ export const getTableById = ({tables}, tableId) => tables.find(table => table.id
 export const addTable = payload => ({type: ADD_TABLE, payload});
 export const updateTables = payload => ({type: UPDATE_TABLES, payload});
 export const updateTable = payload => ({type: UPDATE_TABLE, payload});
+
+
 
 // pobieranie danych z serwera i aktualizacja stanu - magazynu REDUXA 
 export const fetchTables = () => {

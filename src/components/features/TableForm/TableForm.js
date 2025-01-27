@@ -21,25 +21,24 @@ const TableForm = () => {
     // Object.keys(tableData).map(k => console.log(k+" "));
     // Object.values(tableData).map(v => console.log(v+" "));
     
-    if(typeof(tableData) === 'undefined') {
-        navigate('/');
-        
-    }
+    
     
     
     const idData = parseInt(tableId);
-    const peopleAmountData = parseInt(tableData.peopleAmount);
+    const peopleAmountData = parseInt(tableData?.peopleAmount);
     //console.log("peopleAmountData: " + peopleAmountData)
-    const statusData = tableData.status;
+    const statusData = tableData?.status;
    // console.log("statusData: "+ statusData);
-    const maxPeopleAmountData = parseInt(tableData.maxPeopleAmount);
-    const billData = parseInt(tableData.bill);
+    const maxPeopleAmountData = parseInt(tableData?.maxPeopleAmount);
+    const billData = parseInt(tableData?.bill);
 
     const [status, setStatus] = useState(statusData);
     const [peopleAmount, setPeopleAmount] = useState(peopleAmountData);
     const [maxPeopleAmount, setMaxPeopleAmount] = useState(maxPeopleAmountData);
     const [bill, setBill] = useState(billData);
     
+    
+
     const update = e =>{
         e.preventDefault();
       
@@ -52,6 +51,11 @@ const TableForm = () => {
         }));
          navigate(`/`);
     };
+    // useEffect(() => {
+    //     if(typeof tableData === 'undefined') {
+    //         return navigate('/');  
+    //     }
+    // }, [navigate]);
 
     useEffect(() => {
         if(status === 'Cleaning' || status === 'Free') {
@@ -76,6 +80,8 @@ const TableForm = () => {
             setMaxPeopleAmount(10);
         }
     },[peopleAmount, maxPeopleAmount]);
+
+    
 
     // BŁĘDNY ADRES
     if(!tableData) {
@@ -103,7 +109,7 @@ const TableForm = () => {
                     <div className={styles.row}>
                         <p className={styles.label}>Bill:</p>
                         <p className={styles.dollar}>$</p>
-                        <Form.Control className={styles.bill} type='number' value={bill} onChange={e=>setBill(parseInt(e.target.value))} />
+                        <Form.Control className={styles.bill} type='number' value={bill} min={0} onChange={e=>setBill(parseInt(e.target.value))} />
                     </div>
                     <div className={styles.row}>
                          <Button type='submit'>Update</Button>
